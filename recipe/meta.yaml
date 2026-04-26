@@ -50,6 +50,7 @@ requirements:
   run:
     - python
     - apache-sedona
+    - geopandas
     - geos
 
 test:
