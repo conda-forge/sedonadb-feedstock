@@ -51,7 +51,6 @@ requirements:
   run:
     - python
     - apache-sedona
-    - geos
 
 test:
   requires:
