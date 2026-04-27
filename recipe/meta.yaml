@@ -46,6 +46,7 @@ requirements:
   host:
     - python
     - pip
+    - maturin >=1.12,<2.0
     - geos
   run:
     - python
