@@ -58,7 +58,7 @@ test:
     - sedonadb
   commands:
     - pip check
-    - python -c "import sedonadb; sedonadb.context.SedonaContext = sedonadb.connect(); print('SedonaDB successfully initialized')"
+    - python -c "import sedonadb; sd = sedonadb.connect(); print('SedonaDB successfully initialized')"
 
 about:
   home: https://github.com/apache/sedona-db
