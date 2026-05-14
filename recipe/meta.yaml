@@ -60,7 +60,7 @@ test:
   commands:
     - pip check
     - python -c "import sedonadb; sd = sedonadb.connect(); print('sedonadb successfully initialized')"
-    - python -c "import sedona.db; sd = sedona.db.connect(); print 'sedona.db successfully initialized')"
+    - python -c "import sedona.db; sd = sedona.db.connect(); print('sedona.db successfully initialized')"
 
 
 about:
