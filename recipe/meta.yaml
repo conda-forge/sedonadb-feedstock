@@ -20,8 +20,14 @@ build:
     - export PYO3_PYTHON={{ PYTHON }}  # [not win]
     - set "PYO3_PYTHON={{ PYTHON }}"   # [win]
 
-    # Generate Rust license inventory
     - cd python/sedonadb
+
+    # aws-lc-sys <0.40 cannot build jitterentropy (#error: must use -O0) when
+    # CFLAGS_<target> carries -O2 and cc >=1.2.60 is in the lockfile. Move the
+    # lock to aws-lc-sys 0.44 until upstream ships a lockfile with it.
+    - cargo update -p aws-lc-rs --precise 1.18.0
+
+    # Generate Rust license inventory
     - cargo-bundle-licenses --format yaml --output THIRDPARTY.yml
     - mv THIRDPARTY.yml ../../         # [not win]
     - move THIRDPARTY.yml ..\..        # [win]
