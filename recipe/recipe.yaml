@@ -1,7 +1,7 @@
 schema_version: 1
 
 context:
-  version: "0.4.1"
+  version: "0.5.0"
   name: sedonadb
 
 package:
@@ -10,7 +10,7 @@ package:
 
 source:
   url: https://github.com/apache/sedona-db/archive/apache-sedona-db-${{ version }}.tar.gz
-  sha256: ba1630ed17bf13338dcea83488bf76ba4842beff13db49cb35f6ff2a490f92d4
+  sha256: d178491925dc440e91e915923c863a02ef2861ebadd75388afb22e8166563c58
 
 build:
   number: 0
@@ -18,12 +18,11 @@ build:
     # Windows workaround for upstream geos pkg-config flag'-lstdc++' flag, which breaks MSVC
     # Consider moving this to bld.bat
     - if: win
-      then: python -c "import os, pathlib; [f.write_text(f.read_text().replace('-lstdc++', '')) for f in pathlib.Path(os.environ['LIBRARY_PREFIX']).joinpath('lib', 'pkgconfig').glob('*.pc')]"
+      then:
     # Configure PyO3 to use the host Python environment
-    - if: not win
-      then: export PYO3_PYTHON=${{ PYTHON }}
-    - if: win
-      then: set "PYO3_PYTHON=${{ PYTHON }}"
+        - python -c "import os, pathlib; [f.write_text(f.read_text().replace('-lstdc++', '')) for f in pathlib.Path(os.environ['LIBRARY_PREFIX']).joinpath('lib', 'pkgconfig').glob('*.pc')]"
+        - set "PYO3_PYTHON=${{ PYTHON }}"
+      else: export PYO3_PYTHON=${{ PYTHON }}
     - cd python/sedonadb
     # aws-lc-sys <0.40 cannot build jitterentropy (#error: must use -O0) when
     # CFLAGS_<target> carries -O2 and cc >=1.2.60 is in the lockfile. Move the
@@ -33,9 +32,7 @@ build:
     - cargo-bundle-licenses --format yaml --output THIRDPARTY.yml
     - if: not win
       then: mv THIRDPARTY.yml ../../
-    - if: win
-      then: move THIRDPARTY.yml ..\..
-    # Build, skipping auditwheel to rely on shared libs
+      else: move THIRDPARTY.yml ..\..
     - maturin build --release --skip-auditwheel --out dist --interpreter=${{ PYTHON }}
     # Install dynamically to avoid issues with path sytax
     - ${{ PYTHON }} -m pip install sedonadb --no-index --find-links=dist --no-deps -vv
@@ -49,9 +46,9 @@ requirements:
     - cargo-bundle-licenses
     - pkg-config
     - if: build_platform != target_platform
-      then: python
-    - if: build_platform != target_platform
-      then: cross-python_${{ target_platform }}
+      then:
+        - python
+        - cross-python_${{ target_platform }}
     - maturin >=1.12,<2.0
   host:
     - python
