@@ -13,7 +13,7 @@ source:
   sha256: d178491925dc440e91e915923c863a02ef2861ebadd75388afb22e8166563c58
 
 build:
-  number: 0
+  number: 1
   script:
     # Windows workaround for upstream geos pkg-config flag'-lstdc++' flag, which breaks MSVC
     # Consider moving this to bld.bat
